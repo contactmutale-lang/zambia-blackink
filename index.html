@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACKINK ZAMBIA | Premier Tattoo Studio</title>
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () { emailjs.init("lTBCrrgtrE4NyTi7B"); })();
+    </script>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>BLACKINK <span style="color: #2ecc71;">ZAMBIA</span></h1>
+            <p class="tagline">INKED WITH PASSION</p>
+            <div class="hero-btns">
+                <a href="#booking" class="btn primary">Book Now</a>
+                <a href="https://wa.me/260974983484" target="_blank" class="btn whatsapp">WhatsApp Us</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="policies" class="glass-section">
+            <h2 style="color: #f1c40f;">Studio Policies</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>🔞 Age Limit</h3>
+                    <p>Strictly 18+ only. ID is required on the day of your appointment. No exceptions.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>💰 Deposits</h3>
+                    <p>A non-refundable deposit is required to secure your booking. This is deducted from the final price.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>🏥 Health & Safety</h3>
+                    <p>We use 100% sterilized equipment. Please inform us of any allergies or skin conditions.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>🎨 Custom Designs</h3>
+                    <p>Send your reference early. Small changes can be made on the day of the session.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="booking" class="glass-section">
+            <h2 style="color: #2ecc71;">Secure Your Session</h2>
+            <form id="appointment-form">
+                <div class="form-row">
+                    <div style="flex:1">
+                        <label>Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div style="flex:1">
+                        <label>Time</label>
+                        <input type="time" id="time" required>
+                    </div>
+                </div>
+                
+                <label>Phone Number</label>
+                <input type="tel" id="phone" placeholder="097..." required>
+                
+                <div class="upload-area">
+                    <div class="upload-box" id="drop-zone" onclick="document.getElementById('tattoo-upload').click()">
+                        <p id="upload-text">📸 Click to Upload Reference Image</p>
+                        <input type="file" id="tattoo-upload" hidden accept="image/*">
+                    </div>
+                    
+                    <div id="preview-container" style="display: none; margin-top: 15px; text-align: center;">
+                        <img id="image-preview" src="" alt="Preview" style="max-width: 100%; height: 200px; border-radius: 10px; border: 2px solid #2ecc71; object-fit: contain;">
+                        <button type="button" onclick="clearImage()" class="delete-btn" style="display: block; margin: 10px auto;">❌ Remove Image</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn primary" style="width: 100%; border-radius: 10px; margin-top: 20px;">SEND BOOKING REQUEST</button>
+            </form>
+        </section>
+
+        <section id="manage" class="glass-section">
+            <h2 style="color: #9b59b6;">My Bookings</h2>
+            <div class="form-row">
+                <input type="tel" id="manage-phone" placeholder="Enter phone to view">
+                <button onclick="loadAppointments()" class="btn primary" style="width: auto;">View</button>
+            </div>
+            <ul id="appointments" style="list-style: none; padding: 0; margin-top: 20px;"></ul>
+        </section>
+    </main>
+
+    <script src="tattoo-app.js"></script>
+</body>
+</html>
