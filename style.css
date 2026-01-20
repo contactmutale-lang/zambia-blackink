@@ -1,0 +1,48 @@
+:root {
+    --purple: #9b59b6;
+    --green: #2ecc71;
+    --whatsapp: #25d366;
+    --black: #0a0a0c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    /* REDUCED OVERLAY (0.3) for much clearer background pic */
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+                url('logo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+    scroll-behavior: smooth;
+}
+
+.container { max-width: 800px; margin: auto; padding: 20px; }
+
+.glass-section {
+    background: rgba(10, 10, 12, 0.9); /* Solid dark for text clarity */
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+@media (max-width: 600px) { .faq-grid { grid-template-columns: 1fr; } }
+
+.faq-item { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; }
+
+.btn { padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; }
+.primary { background: var(--green); color: black; }
+.whatsapp { background: var(--whatsapp); color: white; margin-left: 10px; }
+
+.form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+input { width: 100%; padding: 14px; background: #1a1a1c; border: 1px solid #444; color: white; border-radius: 10px; }
+
+.upload-box { border: 2px dashed #555; padding: 25px; text-align: center; border-radius: 15px; cursor: pointer; }
+.delete-btn { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
