@@ -1,85 +1,145 @@
-// Service Worker Registration
+// --- 1. SERVICE WORKER & INITIALIZATION ---
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+    });
 }
 
+const appointmentForm = document.getElementById('appointment-form');
+const dateInput = document.getElementById('date');
+const timeSelect = document.getElementById('time');
 const fileInput = document.getElementById('tattoo-upload');
 const previewContainer = document.getElementById('preview-container');
 const imagePreview = document.getElementById('image-preview');
-const uploadText = document.getElementById('upload-text');
 
-// 1. IMAGE PREVIEW & REMOVE
-fileInput.addEventListener('change', function() {
+// Prevent past dates
+if (dateInput) { 
+    dateInput.min = new Date().toISOString().split("T")[0]; 
+}
+
+// --- 2. DOUBLE BOOKING: GRAY OUT & DISABLE TAKEN SLOTS ---
+// This function checks the local database and grays out slots when a date is picked
+dateInput?.addEventListener('change', function() {
+    const selectedDate = this.value;
+    const localAppts = JSON.parse(localStorage.getItem('appointments')) || [];
+    
+    // Reset all options to enabled/white first
+    Array.from(timeSelect.options).forEach(option => {
+        if (option.value !== "") {
+            option.disabled = false;
+            option.style.color = "white";
+            option.style.backgroundColor = "";
+            option.innerText = option.value; // Reset text
+        }
+    });
+
+    // Check against existing bookings
+    localAppts.forEach(appt => {
+        if (appt.booking_date === selectedDate) {
+            Array.from(timeSelect.options).forEach(option => {
+                if (option.value === appt.booking_time) {
+                    option.disabled = true; // Make unclickable
+                    option.style.color = "#555"; // Gray out text
+                    option.style.backgroundColor = "#111"; // Darken background
+                    option.innerText = option.value + " (ALREADY BOOKED)";
+                }
+            });
+        }
+    });
+});
+
+// --- 3. IMAGE PREVIEW & DELETE LOGIC ---
+fileInput?.addEventListener('change', function () {
     const file = this.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             imagePreview.src = e.target.result;
             previewContainer.style.display = 'block';
-            uploadText.innerText = "✅ Image Loaded";
         }
         reader.readAsDataURL(file);
     }
 });
 
-window.clearImage = function() {
+window.clearImage = function () {
     fileInput.value = "";
+    imagePreview.src = "";
     previewContainer.style.display = 'none';
-    uploadText.innerText = "📸 Click to Upload Reference Image";
 };
 
-// 2. BOOKING LOGIC (With Conflict Check)
-document.getElementById('appointment-form').addEventListener('submit', function(e) {
+// --- 4. BOOKING SUBMISSION LOGIC ---
+appointmentForm?.addEventListener('submit', function (e) {
     e.preventDefault();
-    
-    const date = document.getElementById('date').value;
-    const time = document.getElementById('time').value;
-    const phone = document.getElementById('phone').value;
+
+    const selectedDate = dateInput.value;
+    const selectedTime = timeSelect.value;
+    const userPhone = document.getElementById('phone').value;
 
     const localAppts = JSON.parse(localStorage.getItem('appointments')) || [];
-    const isConflict = localAppts.some(a => a.booking_date === date && a.booking_time === time);
+
+    // Final conflict check before sending
+    const isConflict = localAppts.some(appt =>
+        appt.booking_date === selectedDate && appt.booking_time === selectedTime
+    );
 
     if (isConflict) {
-        alert("⚠️ This time slot is already taken locally. Please choose another.");
+        alert(`⚠️ Slot Taken: Someone just booked ${selectedTime} on ${selectedDate}. Please choose another.`);
         return;
     }
 
-    const templateParams = {
-        booking_date: date,
-        booking_time: time,
-        user_phone: phone,
-        reference_image: fileInput.files[0] ? fileInput.files[0].name : "No image"
+    const apptData = {
+        user_name: document.getElementById('name').value,
+        user_phone: userPhone,
+        booking_date: selectedDate,
+        booking_time: selectedTime,
+        description: document.getElementById('tattoo-description').value,
+        id: Date.now() // Unique ID for deleting
     };
 
-    emailjs.send('service_default', 'template_your_id', templateParams)
+    // Send via EmailJS
+    emailjs.send("service_m7ii4ac", "template_me1ljwe", apptData)
         .then(() => {
-            alert("✅ Booking Request Sent!");
-            localAppts.push({ ...templateParams, id: Date.now() });
+            alert("✅ Success! Your booking request has been sent.");
+            
+            // Save to local list to enable the gray-out feature
+            localAppts.push(apptData);
             localStorage.setItem('appointments', JSON.stringify(localAppts));
-            this.reset();
+            
+            // Reset Form
+            appointmentForm.reset();
             clearImage();
         })
-        .catch(() => alert("❌ Failed to send request."));
+        .catch((err) => {
+            alert("❌ Failed to send request. Check your connection.");
+        });
 });
 
-// 3. MANAGE BOOKINGS
-window.loadAppointments = function() {
-    const phone = document.getElementById('manage-phone').value;
+// --- 5. MANAGE BOOKINGS ---
+function loadAppointments() {
+    const userPhone = document.getElementById('manage-phone')?.value.trim();
     const list = document.getElementById('appointments');
     const appts = JSON.parse(localStorage.getItem('appointments')) || [];
-    const filtered = appts.filter(a => a.user_phone === phone);
-    
-    list.innerHTML = filtered.map(a => `
-        <li style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-            <div><strong>${a.booking_date}</strong> at ${a.booking_time}</div>
-            <button class="delete-btn" onclick="deleteBooking(${a.id})">Cancel</button>
-        </li>
-    `).join('') || "<li>No bookings found.</li>";
-};
 
-window.deleteBooking = function(id) {
-    let appts = JSON.parse(localStorage.getItem('appointments')) || [];
-    appts = appts.filter(a => a.id !== id);
-    localStorage.setItem('appointments', JSON.stringify(appts));
-    loadAppointments();
+    if (!userPhone) { alert("Please enter your phone number."); return; }
+
+    const filtered = appts.filter(a => a.user_phone === userPhone);
+    list.innerHTML = filtered.length === 0
+        ? '<li style="padding:10px;">No bookings found for this number.</li>'
+        : filtered.map(a => `
+            <li class="appointment-card">
+                <div>
+                    <strong>${a.booking_date}</strong> at <strong>${a.booking_time}</strong>
+                </div>
+                <button class="delete-btn" onclick="deleteBooking(${a.id})">Cancel</button>
+            </li>`).join('');
+}
+
+window.deleteBooking = function (id) {
+    if (confirm("Are you sure you want to cancel this booking?")) {
+        let appts = JSON.parse(localStorage.getItem('appointments')) || [];
+        appts = appts.filter(a => a.id !== id);
+        localStorage.setItem('appointments', JSON.stringify(appts));
+        loadAppointments();
+        alert("Booking removed.");
+    }
 };
