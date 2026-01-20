@@ -181,3 +181,31 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+/* Controlled size for the location box */
+#location.glass-section {
+    max-width: 800px; /* Matches your other sections */
+    margin: 30px auto;
+    padding: 25px; /* Slightly tighter padding for better fit */
+}
+
+/* Responsive Map Container */
+.map-container {
+    margin-top: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    height: 300px; /* Default desktop height */
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile Specific Sizing */
+@media (max-width: 600px) {
+    #location.glass-section {
+        margin: 15px; /* Smaller margins on phones */
+        padding: 15px;
+    }
+    
+    .map-container {
+        height: 200px; /* Shorter height so it doesn't take up the whole phone screen */
+    }
+}
