@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BLACKINK ZAMBIA | Premier Tattoo Studio</title>
-    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -13,84 +13,89 @@
     </script>
 </head>
 <body>
-
     <header class="hero">
         <div class="hero-content">
             <h1>BLACKINK <span style="color: #2ecc71;">ZAMBIA</span></h1>
             <p class="tagline">INKED WITH PASSION</p>
             <div class="hero-btns">
-                <a href="#booking" class="btn primary">Book Now</a>
-                <a href="https://wa.me/260974983484" target="_blank" class="btn whatsapp">WhatsApp Us</a>
+                <a href="#booking" class="btn-primary">Book Now</a>
+                <a href="https://wa.me/260974983484" target="_blank" class="btn-whatsapp">Chat on WhatsApp</a>
             </div>
         </div>
     </header>
 
-    <main class="container">
-        <section id="policies" class="glass-section">
-            <h2 style="color: #f1c40f;">Studio Policies</h2>
+    <main>
+        <section id="pricing" class="glass-section">
+            <h2 style="color: #3498db;">Pricing & Policies</h2>
             <div class="faq-grid">
                 <div class="faq-item">
-                    <h3>🔞 Age Limit</h3>
-                    <p>Strictly 18+ only. ID is required on the day of your appointment. No exceptions.</p>
+                    <h3>Starting Price</h3>
+                    <p>Our studio minimum is <strong>K200</strong>. Prices vary based on size and detail.</p>
                 </div>
                 <div class="faq-item">
-                    <h3>💰 Deposits</h3>
-                    <p>A non-refundable deposit is required to secure your booking. This is deducted from the final price.</p>
+                    <h3>Deposit Requirement</h3>
+                    <p>A <strong>K100</strong> deposit is required to confirm your slot. Non-refundable.</p>
                 </div>
                 <div class="faq-item">
-                    <h3>🏥 Health & Safety</h3>
-                    <p>We use 100% sterilized equipment. Please inform us of any allergies or skin conditions.</p>
+                    <h3>Booking Policy</h3>
+                    <p>Please arrive 10 minutes early. Rescheduling requires 24h notice.</p>
                 </div>
                 <div class="faq-item">
-                    <h3>🎨 Custom Designs</h3>
-                    <p>Send your reference early. Small changes can be made on the day of the session.</p>
+                    <h3>Location</h3>
+                    <p>Find us in Kabwata nzou street, Lusaka. Map below for directions.</p>
                 </div>
             </div>
         </section>
 
         <section id="booking" class="glass-section">
-            <h2 style="color: #2ecc71;">Secure Your Session</h2>
+            <h2 style="color: #9b59b6;">Secure Your Session</h2>
             <form id="appointment-form">
                 <div class="form-row">
-                    <div style="flex:1">
-                        <label>Date</label>
-                        <input type="date" id="date" required>
-                    </div>
-                    <div style="flex:1">
-                        <label>Time</label>
-                        <input type="time" id="time" required>
+                    <input type="text" id="name" placeholder="Full Name" required>
+                    <input type="tel" id="phone" placeholder="Mobile Number (09...)" required>
+                </div>
+                <div class="form-row">
+                    <input type="date" id="date" required>
+                    <select id="time" required>
+                        <option value="" disabled selected>Select Time Slot</option>
+                        <option value="07:00 AM">07:00 AM</option>
+                        <option value="08:00 AM">08:00 AM</option>
+                        <option value="09:00 AM">09:00 AM</option>
+                        <option value="10:00 AM">10:00 AM</option>
+                        <option value="11:00 AM">11:00 AM</option>
+                        <option value="12:00 PM">12:00 PM</option>
+                        <option value="01:00 PM">01:00 PM</option>
+                        <option value="02:00 PM">02:00 PM</option>
+                        <option value="03:00 PM">03:00 PM</option>
+                        <option value="04:00 PM">04:00 PM</option>
+                    </select>
+                </div>
+                <div class="upload-box">
+                    <p>Upload a reference design</p>
+                    <input type="file" id="tattoo-upload" accept="image/*">
+                    <div id="preview-container" style="display: none; margin-top: 15px;">
+                        <img id="image-preview" src="" style="max-width: 100%; height: 150px; border-radius: 10px; border: 2px solid #2ecc71;">
+                        <button type="button" onclick="clearImage()" class="delete-btn" style="display: block; margin: 10px auto;">Remove Image</button>
                     </div>
                 </div>
-                
-                <label>Phone Number</label>
-                <input type="tel" id="phone" placeholder="097..." required>
-                
-                <div class="upload-area">
-                    <div class="upload-box" id="drop-zone" onclick="document.getElementById('tattoo-upload').click()">
-                        <p id="upload-text">📸 Click to Upload Reference Image</p>
-                        <input type="file" id="tattoo-upload" hidden accept="image/*">
-                    </div>
-                    
-                    <div id="preview-container" style="display: none; margin-top: 15px; text-align: center;">
-                        <img id="image-preview" src="" alt="Preview" style="max-width: 100%; height: 200px; border-radius: 10px; border: 2px solid #2ecc71; object-fit: contain;">
-                        <button type="button" onclick="clearImage()" class="delete-btn" style="display: block; margin: 10px auto;">❌ Remove Image</button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn primary" style="width: 100%; border-radius: 10px; margin-top: 20px;">SEND BOOKING REQUEST</button>
+                <textarea id="tattoo-description" placeholder="Describe your tattoo idea..." required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%; border-radius: 10px; margin-top: 20px;">SEND BOOKING REQUEST</button>
             </form>
         </section>
 
         <section id="manage" class="glass-section">
-            <h2 style="color: #9b59b6;">My Bookings</h2>
+            <h2 style="color: #2ecc71;">Check My Bookings</h2>
             <div class="form-row">
-                <input type="tel" id="manage-phone" placeholder="Enter phone to view">
-                <button onclick="loadAppointments()" class="btn primary" style="width: auto;">View</button>
+                <input type="tel" id="manage-phone" placeholder="Enter mobile number">
+                <button type="button" onclick="loadAppointments()" class="btn-primary">Find</button>
             </div>
-            <ul id="appointments" style="list-style: none; padding: 0; margin-top: 20px;"></ul>
+            <ul id="appointments" style="list-style: none; padding: 0;"></ul>
         </section>
     </main>
 
+    <footer>
+        <p>© 2026 BLACKINK ZAMBIA. All rights reserved.</p>
+    </footer>
     <script src="tattoo-app.js"></script>
 </body>
 </html>
